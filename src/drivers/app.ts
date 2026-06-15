@@ -10,8 +10,10 @@ import {
 } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { EmailAlreadyExistsError, InvalidMarketingPreferredChannelError, PasswordDoNotMatchError } from "../application/errors/index.js";
-import { CreateUser } from "../application/useCases/CreateUser.js";
-import { DrizzelUserRepository } from "../resources/repositories/drizzle/UserRepository.js";
+import { makeCreateUser } from "../application/factories/make-create-users.js";
+import { createUserInputSchema } from "../application/useCases/create-user/create-user-input.js";
+import { createUserOutputSchema } from "../application/useCases/create-user/create-user-output.js";
+import { errorResponseSchema } from "../application/dtos/common/error-response.js";
 
 export const buildApp = () => {
   const app = Fastify();
@@ -54,36 +56,21 @@ export const buildApp = () => {
       method: "POST",
       url: "/users",
       schema: {
-        body: z.object({
-          name: z.string().trim().min(1),
-          age: z.number().int().min(18).max(100),
-          phoneNumber: z.string().startsWith("+55", { message: 'O número precisa começar com +55' }).trim().min(1),
-          email: z.email(),
-          password: z.string().min(8),
-          passwordConfirmation: z.string().min(8),
-          preferredMarketingChannel: z.enum(["email", "sms", "push", "whatsapp"]),
-        }),
+        body: createUserInputSchema,
         response: {
-          201: z.object({
-            id: z.uuid(),
-          }),
-          400: z.object({
-            error: z.string(),
-          }),
-          409: z.object({
-            error: z.string(),
-          }),
-          500: z.object({
-            error: z.string(),
-          }),
+          201: createUserOutputSchema,
+          400: errorResponseSchema,
+          409: errorResponseSchema,
+          500: errorResponseSchema,
         },
       },
       handler: async (request, reply) => {
         try {
-          const createUser = new CreateUser(new DrizzelUserRepository)
+          const createUser = makeCreateUser()
           const output = await createUser.execute(request.body)
           return reply.status(201).send(output)
         } catch (error) {
+
           if (error instanceof PasswordDoNotMatchError) {
             return reply.status(400).send({ error: "Passwords do not match" });
           }
@@ -95,7 +82,12 @@ export const buildApp = () => {
               .status(400)
               .send({ error: "Invalid marketing preferred channel" });
           }
-          return reply.status(500).send({ error: "Erro ao criar usuário" });
+          // return reply.status(500).send({ error: "Erro ao criar usuário" });
+          return reply.status(500).send({
+            error: error instanceof Error
+              ? error.message
+              : "Erro desconhecido"
+          })
         }
       },
     });
