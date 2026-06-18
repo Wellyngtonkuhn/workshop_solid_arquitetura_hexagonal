@@ -10,7 +10,7 @@ import {
 } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { EmailAlreadyExistsError, InvalidMarketingPreferredChannelError, PasswordDoNotMatchError } from "../application/errors/index.js";
-import { makeCreateUser } from "../application/factories/make-create-users.js";
+import { makeCreateUser } from "../application/factories/make-create-users.factory.js";
 import { createUserInputSchema } from "../application/useCases/create-user/create-user-input.js";
 import { createUserOutputSchema } from "../application/useCases/create-user/create-user-output.js";
 import { errorResponseSchema } from "../application/dtos/common/error-response.js";

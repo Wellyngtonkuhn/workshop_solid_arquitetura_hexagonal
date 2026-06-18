@@ -7,7 +7,7 @@ export function makeCreateUser() {
 
   const userRepository = new DrizzelUserRepository()
 
-  const notificationService =new NotificationService()
+  const notificationService = new NotificationService()
 
   return new CreateUser(
     userRepository,

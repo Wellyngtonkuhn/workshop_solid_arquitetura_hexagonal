@@ -1,4 +1,4 @@
-import { SendNotificationFactory } from "../factories/user-factory.js"
+import { SendNotificationFactory } from "../factories/make-notification.factory.js"
 import { NotificationChannel } from "../ports/notification-provider.js"
 
 export class NotificationService {
