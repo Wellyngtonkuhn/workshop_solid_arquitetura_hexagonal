@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { CreateUserRepositoryInput, UserRepository } from "../../../domain/repositories/user-repository.js";
+import { UserRepository } from "../../../domain/repositories/user-repository.js";
 import { db } from "../../database/drizzle/client.js";
 import { usersTable } from "../../database/schema/user-table.js";
 import { User } from "../../../domain/entities/User.js";
@@ -18,16 +18,17 @@ export class DrizzelUserRepository implements UserRepository {
     return UserMapper.toDomain(existingUser)
   }
 
-  async createUser(body: CreateUserRepositoryInput): Promise<User> {
+  async createUser(user: User): Promise<User > {
     const [userCreated] = await db
       .insert(usersTable)
       .values({
-        name: body.name,
-        age: body.age,
-        email: body.email,
-        password: body.password,
-        phoneNumber: body.phoneNumber,
-        preferredMarketingChannel: body.preferredMarketingChannel,
+        name: user.propsData.name,
+        age: user.propsData.age,
+        email: user.propsData.email,
+        password: user.propsData.password,
+        phoneNumber: user.propsData.phoneNumber,
+        preferredMarketingChannel: user.propsData.preferredMarketingChannel,
+        status: user.getStatus()
       })
       .returning();
 

@@ -1,8 +1,8 @@
 import { PendingUserState } from "../states/user/pending-user.state.js";
 import { UserState } from "../states/user/user.state.js";
 
-export interface UserEntity {
-  id: string;
+export interface UserEntityProps {
+  id?: string;
   name: string;
   age: number;
   phoneNumber: string;
@@ -21,12 +21,20 @@ export enum UserStatus {
 
 export class User {
   constructor(
-    private props: UserEntity,
+    private props: UserEntityProps,
     private state: UserState
   ) {}
 
-  static create(user: UserEntity){
-    return new User(user, new PendingUserState())
+  static create(props: Omit<UserEntityProps, 'id' | 'status'>){
+    return new User({
+      ...props,
+      status: UserStatus.PENDING
+    },
+    new PendingUserState())
+  }
+
+  static restore(props: UserEntityProps, state: UserState) {
+    return new User(props, state)
   }
 
   // comportamento do domínio
@@ -70,6 +78,4 @@ export class User {
   get propsData() {
     return this.props
   }
-
-
 }
