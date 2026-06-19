@@ -4,5 +4,5 @@ import { User } from "../entities/User.js"
 
 export interface UserRepository {
   findByEmail(email: string): Promise<User | null>
-  createUser(user: User): Promise<User | null>
+  save(user: User): Promise<User | null>
 }

@@ -18,7 +18,7 @@ export class DrizzelUserRepository implements UserRepository {
     return UserMapper.toDomain(existingUser)
   }
 
-  async createUser(user: User): Promise<User > {
+  async save(user: User): Promise<User > {
     const [userCreated] = await db
       .insert(usersTable)
       .values({
