@@ -1,8 +1,8 @@
 import { buildApp } from "./drivers/app.js"
 
-const app = buildApp()
+const app = await buildApp()
 
-await app.ready()
+// await app.ready()
 
 await app.listen({
   port: 3000

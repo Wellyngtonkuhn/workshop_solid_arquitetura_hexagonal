@@ -1,0 +1,1 @@
+// os clientes são a integração/keys e configuração que o provider vai usar ex: stripe, sendgrid, mercado pago etc
