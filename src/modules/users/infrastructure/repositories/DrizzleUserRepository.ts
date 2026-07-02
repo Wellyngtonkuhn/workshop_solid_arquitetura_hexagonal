@@ -20,6 +20,16 @@ export class DrizzelUserRepository implements UserRepository {
     return UserMapper.toDomain(existingUser);
   }
 
+  async findById(id: string): Promise<User | null> {
+    const [ user ] = await db.select().from(usersTable).where(eq(usersTable.id, id))
+
+    if (!user) {
+      return null;
+    }
+
+    return UserMapper.toDomain(user)
+  }
+
   async save(user: User): Promise<User> {
     try {
       const [userCreated] = await db
@@ -36,6 +46,19 @@ export class DrizzelUserRepository implements UserRepository {
         .returning();
 
       return UserMapper.toDomain(userCreated);
+    } catch (error) {
+      mapDrizzleError(error, userDbErrorMap);
+    }
+  }
+
+  async update(user: User): Promise<void> {
+    try {
+      await db.update(usersTable).set({
+        name: user.propsData.name,
+        age: user.propsData.age,
+        phoneNumber: user.propsData.phoneNumber,
+        preferredMarketingChannel: user.propsData.preferredMarketingChannel
+      }).where(eq(usersTable.id, user.propsData.id!))
     } catch (error) {
       mapDrizzleError(error, userDbErrorMap);
     }

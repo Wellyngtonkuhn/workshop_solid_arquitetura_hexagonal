@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { beforeAll, afterAll, beforeEach, describe, it, expect } from "vitest";
 import request from 'supertest'
-import { buildApp } from "../../../../../drivers/app.js";
-import { db } from "../../../../../shared/database/drizzle/client.js";
-import { usersTable } from "../../../../../shared/database/schema/user-table.js";
+import { buildApp } from "../../../../drivers/app.js";
+import { db } from "../../../../shared/database/drizzle/client.js";
+import { usersTable } from "../../../../shared/database/schema/user-table.js";
 import { eq } from "drizzle-orm";
 
 let app: FastifyInstance;

@@ -1,3 +1,4 @@
+import { UpdateUserInputDTO } from "../../application/useCases/update/input.dto.js";
 import { PendingUserState } from "../states/user/pending-user.state.js";
 import { UserState } from "../states/user/user.state.js";
 
@@ -35,6 +36,13 @@ export class User {
 
   static restore(props: UserEntityProps, state: UserState) {
     return new User(props, state)
+  }
+
+  updateProfile(data: UpdateUserInputDTO) {
+    this.props.name = data.name;
+    this.props.phoneNumber = data.phoneNumber;
+    this.props.preferredMarketingChannel = data.preferredMarketingChannel;
+    this.props.age = data.age;
   }
 
   // comportamento do domínio / emcapsulamento 
