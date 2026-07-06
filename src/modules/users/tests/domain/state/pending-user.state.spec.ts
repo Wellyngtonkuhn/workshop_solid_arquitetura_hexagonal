@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { PendingUserState } from "../pending-user.state.js";
-import { EmailConfirmedState } from "../email-confirmed-user.state.js";
+import { PendingUserState } from "../../../domain/states/user/pending-user.state.js";
+import { EmailConfirmedState } from "../../../domain/states/user/email-confirmed-user.state.js";
 
 describe('PendingUserState',() => {
   const state = new PendingUserState()

@@ -1,10 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { UpdateUser } from "../../application/useCases/update/index.js";
 import { InMemoryUserRepository } from "../repositories/InMemoryUserRepository.js";
 import { UserNotFound } from "../../errors/user-not-found.error.js";
-import { User, UserStatus } from "../../domain/entities/User.js";
+import { User } from "../../domain/entities/User.js";
 import { UserCannotUpdateProfileError } from "../../errors/cannot-update-profile.error.js";
-import { VerifiedUserState } from "../../domain/states/user/verified-user.state.js";
 
 let repository: InMemoryUserRepository;
 let sut: UpdateUser;
