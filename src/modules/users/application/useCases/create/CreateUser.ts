@@ -8,13 +8,15 @@ import { PasswordDoNotMatchError } from "../../../errors/password-do-not-match.e
 import { EmailAlreadyExistsError } from "../../../errors/email-already-exists.error.js";
 import { NotificationService } from "../../../../../shared/infrastructure/notifications/Notification.service.js";
 import { NotificationChannel } from "../../../../../shared/infrastructure/notifications/ports/notification-provider.js";
+import { TokenProvider } from "../../../../../shared/application/ports/token-provider.js";
 
 export class CreateUser {
   // aqui é invertido a dependencia usando o D do SOLID, esse módulo de alto nível depende apenas da abstração do módulo de baixo nível
   constructor(
     private userRepository: UserRepository,
     private notificationService: NotificationService,
-    private hashProvider: HashProvider
+    private hashProvider: HashProvider,
+    private tokenProvider: TokenProvider,
   ){}
 
   async execute(body: CreateUserInputDTO): Promise<CreateUserOutputDTO>{
@@ -38,10 +40,11 @@ export class CreateUser {
     })
 
     const persistedUser = await this.userRepository.save(user)
-
-    await this.notificationService.send(persistedUser.propsData.preferredMarketingChannel as NotificationChannel, 'payload teste')
-
     const userData = persistedUser.propsData
+
+    const confirmationToken = this.tokenProvider.sign({ sub: userData.id!, purpose: 'email_confirmation' }, 60 * 48)
+
+    await this.notificationService.send(userData.preferredMarketingChannel as NotificationChannel, confirmationToken)
 
     return {
       id: userData.id!,

@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
 import { TokenPayload, TokenProvider } from "../../../application/ports/token-provider.js";
+import { env } from "../../../config/env.js";
 
 export class JwtTokenProvider implements TokenProvider {
-  private readonly secret = process.env.JWT_SECRET!;
+  private readonly secret = env.JWT_SECRET
 
   sign(payload: TokenPayload, expiresInMinutes: number): string {
     return jwt.sign(

@@ -6,7 +6,7 @@ describe('Token Provider', () => {
   const jwtProvider = new JwtTokenProvider()
   it('should create a valid token  jwt', () => {
     const userId = '123456789'
-    const token = jwtProvider.sign({sub: userId}, 1)
+    const token = jwtProvider.sign({sub: userId, purpose: 'authentication'}, 1)
     expect(token).toBeTypeOf("string")
 
     const payload = jwtProvider.verify(token)
@@ -15,7 +15,7 @@ describe('Token Provider', () => {
 
   it('should verify a jwt token', () => {
     const userId = '123456789'
-    const token = jwtProvider.sign({sub: userId}, 1)
+    const token = jwtProvider.sign({ sub: userId, purpose: 'email_confirmation'}, 1)
     expect(token).toBeTypeOf("string")
 
     const payload = jwtProvider.verify(token)
