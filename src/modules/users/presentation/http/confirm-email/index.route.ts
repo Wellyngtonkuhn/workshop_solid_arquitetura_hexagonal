@@ -11,7 +11,7 @@ export async function confirmUserEmail(app: FastifyInstance) {
     handler: async (request, reply) => {
       const confirmEmail = makeConfirmUserEmail()
       const token = request.body.token
-      const output = await confirmEmail.excute(token)
+      const output = await confirmEmail.execute(token)
       return reply.status(204).send(output)
     }
   })

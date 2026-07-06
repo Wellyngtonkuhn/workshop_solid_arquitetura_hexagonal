@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { User } from "../../domain/entities/User.js";
 import { UserRepository } from "../../domain/repositories/user-repository.js";
 
@@ -5,6 +6,7 @@ export class InMemoryUserRepository implements UserRepository {
   public users: User[] = [];
 
   async save(user: User): Promise<User> {
+    user.propsData.id = randomUUID()
     this.users.push(user);
     return user;
   }

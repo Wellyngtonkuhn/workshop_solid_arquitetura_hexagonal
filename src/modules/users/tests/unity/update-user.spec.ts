@@ -35,12 +35,10 @@ describe('UseCase - Update user', () => {
       preferredMarketingChannel: "email",
     })
 
-    user.propsData.id = "1";
-
-    await repository.save(user);
+    const userCreated = await repository.save(user);
     
     await expect((
-      sut.execute('1', {
+      sut.execute(userCreated.propsData?.id!, {
         name: "Novo",
         age: 30,
         phoneNumber: "+5511999999999",
@@ -59,20 +57,19 @@ describe('UseCase - Update user', () => {
       preferredMarketingChannel: "email",
     });
 
-    user.propsData.id = "3";
     user.register()
     user.activate()
 
-    await repository.save(user);
+    const userCreated = await repository.save(user);
 
-    await sut.execute("3", {
+    await sut.execute(userCreated.propsData?.id!, {
       name: "Pedro",
       age: 40,
       phoneNumber: "+5511988888888",
       preferredMarketingChannel: "sms",
     });
 
-    const updated = await repository.findById("3");
+    const updated = await repository.findById(userCreated.propsData?.id!);
 
     expect(updated?.propsData.name).toBe("Pedro");
 
