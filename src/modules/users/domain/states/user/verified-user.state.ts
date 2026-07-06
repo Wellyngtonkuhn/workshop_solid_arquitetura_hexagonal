@@ -4,7 +4,7 @@ import { BlockedUserState } from "./blocked-user.state.js";
 export class VerifiedUserState implements UserState {
 
   register(): UserState {
-    throw new Error("Usuário já verificado")
+    throw new Error("Usuário já regristrado")
   }
 
   activate(): UserState {

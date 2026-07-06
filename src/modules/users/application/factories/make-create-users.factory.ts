@@ -1,5 +1,5 @@
-import { BcryptHashProvider } from "../../../../shared/hash/hashProvider.js"
-import { NotificationService } from "../../../../shared/notifications/Notification.service.js"
+import { NotificationService } from "../../../../shared/infrastructure/notifications/Notification.service.js"
+import { BcryptHashProvider } from "../../../../shared/infrastructure/security/hash/hashProvider.js"
 import { DrizzelUserRepository } from "../../infrastructure/repositories/DrizzleUserRepository.js"
 import { CreateUser } from "../useCases/create/CreateUser.js"
 

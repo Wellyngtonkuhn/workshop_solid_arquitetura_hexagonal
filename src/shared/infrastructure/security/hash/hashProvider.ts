@@ -1,4 +1,4 @@
-import { HashProvider } from "../../modules/users/application/ports/hash-provider.js";
+import { HashProvider } from "../../../../modules/users/application/ports/hash-provider.js";
 import bcrypt from "bcrypt"
 
 export class BcryptHashProvider implements HashProvider {

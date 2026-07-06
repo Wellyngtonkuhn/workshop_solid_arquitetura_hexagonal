@@ -3,11 +3,11 @@ import { CreateUserOutputDTO } from "./create-user-output.js";
 
 import { HashProvider } from "../../ports/hash-provider.js";
 import { UserRepository } from "../../../domain/repositories/user-repository.js";
-import { NotificationService } from "../../../../../shared/notifications/Notification.service.js";
 import { User } from "../../../domain/entities/User.js";
-import { NotificationChannel } from "../../../../../shared/notifications/ports/notification-provider.js";
 import { PasswordDoNotMatchError } from "../../../errors/password-do-not-match.error.js";
 import { EmailAlreadyExistsError } from "../../../errors/email-already-exists.error.js";
+import { NotificationService } from "../../../../../shared/infrastructure/notifications/Notification.service.js";
+import { NotificationChannel } from "../../../../../shared/infrastructure/notifications/ports/notification-provider.js";
 
 export class CreateUser {
   // aqui é invertido a dependencia usando o D do SOLID, esse módulo de alto nível depende apenas da abstração do módulo de baixo nível
