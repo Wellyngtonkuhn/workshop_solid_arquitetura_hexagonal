@@ -6,7 +6,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx --watch src/index.ts",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:unit": "vitest run unit",
+    "test:integration": "vitest run integration",
+    "test:e2e": "vitest run e2e --maxWorkers=1",
+    "test:coverage": "vitest run unit integration --coverage"
+
   },
   "keywords": [],
   "author": "",
@@ -30,6 +35,7 @@
     "@types/node": "^25.9.1",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",

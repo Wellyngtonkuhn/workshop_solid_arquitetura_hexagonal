@@ -1,4 +1,4 @@
-import { HashProvider } from "../../application/ports/hash-provider.js";
+import { HashProvider } from "../../../../application/ports/hash-provider.js";
 
 export class FakeHashProvider implements HashProvider {
   async hash(value: string): Promise<string> {

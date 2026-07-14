@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { describe, expect, it } from "vitest";
-import { JwtTokenProvider } from "./index.js";
+import { JwtTokenProvider } from "../../index.js";
 
 describe('Token Provider', () => {
   const jwtProvider = new JwtTokenProvider()

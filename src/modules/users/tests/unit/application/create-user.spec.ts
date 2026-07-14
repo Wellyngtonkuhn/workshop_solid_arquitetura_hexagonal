@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { CreateUser } from "../../application/useCases/create/CreateUser.js";
-import { InMemoryUserRepository } from "../repositories/InMemoryUserRepository.js";
-import { PasswordDoNotMatchError } from "../../errors/password-do-not-match.error.js";
-import { EmailAlreadyExistsError } from "../../errors/email-already-exists.error.js";
-import { FakeHashProvider } from "../providers/fake-hash-provider.js";
+import { CreateUser } from "../../../application/useCases/create/CreateUser.js";
+import { InMemoryUserRepository } from "../doubles/repositories/InMemoryUserRepository.js";
+import { PasswordDoNotMatchError } from "../../../errors/password-do-not-match.error.js";
+import { EmailAlreadyExistsError } from "../../../errors/email-already-exists.error.js";
+import { FakeHashProvider } from "../doubles/providers/fake-hash-provider.js";
 
 let repository: InMemoryUserRepository;
 let hashProvider: FakeHashProvider;

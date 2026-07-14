@@ -5,11 +5,12 @@ import { db } from "../../../../shared/database/drizzle/client.js";
 import { usersTable } from "../../../../shared/database/schema/user-table.js";
 import { UpdateUserInputDTO } from "../../application/useCases/update/input.dto.js";
 import { CreateUserInputDTO } from "../../application/useCases/create/create-user-input.js";
-import request from 'supertest'
 import { eq } from "drizzle-orm";
-import { createUser } from "../helpers/create-user.js";
-import { updateUser } from "../helpers/update-user.js";
+import { createUser } from "./helpers/create-user.js";
+import { updateUser } from "./helpers/update-user.js";
 import { UserStatus } from "../../domain/entities/User.js";
+import { findUserById } from "./helpers/find-user-by-id.js";
+import { makeCreateUserBody } from "./helpers/make-create-user-body.js";
 
 let app: FastifyInstance;
 
@@ -26,15 +27,7 @@ beforeEach(async () => {
   await db.delete(usersTable)
 })
 
-const createUserBody: CreateUserInputDTO = {
-  name: "Gustavo",
-  age: 45,
-  phoneNumber: "+55955221144",
-  email: "gustavo@gmail.com",
-  password: "123456789",
-  passwordConfirmation: "123456789",
-  preferredMarketingChannel: "email",
-};
+const createUserBody: CreateUserInputDTO = makeCreateUserBody()
 
 const updateUserBody: UpdateUserInputDTO = {
   name: "Mudei o nome",
@@ -42,11 +35,6 @@ const updateUserBody: UpdateUserInputDTO = {
   phoneNumber: "+5511988447755",
   preferredMarketingChannel: "sms",
 };
-
-const findUserById = async (id: string) => {
-  const [row] = await db.select().from(usersTable).where(eq(usersTable.id, id));
-  return row;
-}; 
 
 describe("Patch / users", () => {
   it('should have an error with status 404 when user does not exists', async () => {

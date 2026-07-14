@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { User, UserStatus } from "../../../domain/entities/User.js";
-import { VerifiedUserState } from "../../../domain/states/user/verified-user.state.js";
+import { User, UserStatus } from "../../../../domain/entities/User.js";
+import { VerifiedUserState } from "../../../../domain/states/user/verified-user.state.js";
+
 
 describe("User entity", () => {
   const props = {

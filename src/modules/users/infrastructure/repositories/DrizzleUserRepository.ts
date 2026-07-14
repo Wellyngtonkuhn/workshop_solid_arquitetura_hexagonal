@@ -57,7 +57,8 @@ export class DrizzelUserRepository implements UserRepository {
         name: user.propsData.name,
         age: user.propsData.age,
         phoneNumber: user.propsData.phoneNumber,
-        preferredMarketingChannel: user.propsData.preferredMarketingChannel
+        preferredMarketingChannel: user.propsData.preferredMarketingChannel,
+        status: user.propsData.status        
       }).where(eq(usersTable.id, user.propsData.id!))
     } catch (error) {
       mapDrizzleError(error, userDbErrorMap);

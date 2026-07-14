@@ -5,6 +5,7 @@ import { buildApp } from "../../../../drivers/app.js";
 import { db } from "../../../../shared/database/drizzle/client.js";
 import { usersTable } from "../../../../shared/database/schema/user-table.js";
 import { eq } from "drizzle-orm";
+import { makeCreateUserBody } from "./helpers/make-create-user-body.js";
 
 let app: FastifyInstance;
 
@@ -21,16 +22,7 @@ beforeEach(async () => {
   await db.delete(usersTable);
 });
 
-const validBody = {
-  name: "João Pedro",
-  age: 45,
-  phoneNumber: "+555483997874455",
-  email: "joao.pedro@gmail.com",
-  password: "123456789",
-  passwordConfirmation: "123456789",
-  preferredMarketingChannel: "email",
-};
-
+const validBody = makeCreateUserBody()
 const post = (body: unknown) => request(app.server).post("/users").send(body as object);
 
 const findByEmail = async (email: string) => {

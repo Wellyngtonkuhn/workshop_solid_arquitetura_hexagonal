@@ -13,6 +13,7 @@ export const UserEmailConfirmationSchema = {
   response: {
     204: z.void(),
     400: errorResponseSchema,
+    401: errorResponseSchema,
     404: errorResponseSchema,
     409: errorResponseSchema,
     410: errorResponseSchema,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { VerifiedUserState } from "../../../domain/states/user/verified-user.state.js"
-import { BlockedUserState } from "../../../domain/states/user/blocked-user.state.js"
+import { VerifiedUserState } from "../../../../domain/states/user/verified-user.state.js"
+import { BlockedUserState } from "../../../../domain/states/user/blocked-user.state.js"
 
 describe("VerifiedUserState", () => {
 

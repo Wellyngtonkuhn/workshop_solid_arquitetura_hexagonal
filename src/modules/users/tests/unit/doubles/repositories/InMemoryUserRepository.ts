@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
-import { User } from "../../domain/entities/User.js";
-import { UserRepository } from "../../domain/repositories/user-repository.js";
+import { User } from "../../../../domain/entities/User.js";
+import { UserRepository } from "../../../../domain/repositories/user-repository.js";
 
 export class InMemoryUserRepository implements UserRepository {
   public users: User[] = [];

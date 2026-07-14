@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BcryptHashProvider } from "./hashProvider.js";
+import { BcryptHashProvider } from "../../hashProvider.js";
 
 describe('Integration test for hash provider', () => {
   it('should hash a value', async () => {
