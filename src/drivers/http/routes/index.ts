@@ -5,5 +5,5 @@ export async function registerAllRoutes(app: FastifyInstance) {
   const prefix = '/api'
   await app.register(usersRoutes, { prefix });
 
-  console.log('✅ Todas as rotas dos módulos foram registradas');
+  console.log('✔ Todas as rotas dos módulos foram registradas');
 }

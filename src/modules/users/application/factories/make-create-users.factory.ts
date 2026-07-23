@@ -5,6 +5,7 @@ import { DrizzelUserRepository } from "../../infrastructure/repositories/Drizzle
 import { CreateUser } from "../useCases/create/CreateUser.js"
 
 export function makeCreateUser() {
+  console.log("✔ CreateUser initialized");
   const userRepository = new DrizzelUserRepository()
   const notificationService = new NotificationService()
   const bcryptHashProvider = new BcryptHashProvider()

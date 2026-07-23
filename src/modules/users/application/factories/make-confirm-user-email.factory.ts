@@ -7,6 +7,8 @@ import { SendWelcomeEmailObserver } from "../observers/send-welcome-email.observ
 import { UserConfirmEmail } from "../useCases/confirm-email/index.js";
 
 export function makeConfirmUserEmail(){
+  console.log("✔ UserConfirmEmail initialized");
+  
   const userRepository = new DrizzelUserRepository()
   const tokenProvider = new JwtTokenProvider()
   const eventBus = new InMemoryEventBus()

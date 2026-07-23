@@ -3,6 +3,9 @@ import { EventBus, EventConstructor } from "./event-bus.js";
 import { Observer } from "./observer.js";
 
 export class InMemoryEventBus implements EventBus {
+  constructor() {
+    console.log("⚠️ [EventBus] Nova instância do EventBus alocada na memória!");
+  }
 
   private observers = new Map<EventConstructor<any>, Observer<any>[]>();
 

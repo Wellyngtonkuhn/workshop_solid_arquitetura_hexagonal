@@ -7,4 +7,5 @@ export async function registerPlugins(app: FastifyInstance) {
   registerValidation(app);
   registerErrorHandler(app);
   await registerSwagger(app);
+  console.log("✔ All plugins initialized");
 }
