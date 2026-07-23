@@ -1,13 +1,13 @@
 import Fastify from "fastify";
 import { registerPlugins } from "./http/plugins/index.js";
-import { usersRoutes } from "../modules/users/presentation/http/index.js";
+import { registerAllRoutes } from "./http/routes/index.js";
 
 export const buildApp = async() => {
   const app = Fastify();
 
   await registerPlugins(app)
 
-  await app.register(usersRoutes);
+  await registerAllRoutes(app)
  
   return app;
 };

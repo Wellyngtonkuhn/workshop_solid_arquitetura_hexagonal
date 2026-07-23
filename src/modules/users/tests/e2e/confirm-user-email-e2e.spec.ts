@@ -37,7 +37,7 @@ describe("Confirm user Email / users/email-confirmation", () => {
 
     const token = tokenProvider.sign({ sub: createResponse.body.id, purpose: 'email_confirmation' }, 10)
    
-    const confirmEmailResponse = await request(app.server).patch("/users/email-confirmation").send({ token });
+    const confirmEmailResponse = await request(app.server).patch("/api/users/email-confirmation").send({ token });
     expect(confirmEmailResponse.status).toBe(204);
 
     const user = await findUserById(createResponse.body.id)
@@ -49,7 +49,7 @@ describe("Confirm user Email / users/email-confirmation", () => {
     const createResponse = await createUser(app, createUserBody)
     expect(createResponse.status).toBe(201)
 
-    const confirmEmailResponse = await request(app.server).patch("/users/email-confirmation").send({  });
+    const confirmEmailResponse = await request(app.server).patch("/api/users/email-confirmation").send({  });
     expect(confirmEmailResponse.status).toBe(400);
     expect(confirmEmailResponse.body.error.code).toBe("VALIDATION_ERROR");
     expect(confirmEmailResponse.body.error.details).toContainEqual(
@@ -60,28 +60,28 @@ describe("Confirm user Email / users/email-confirmation", () => {
   })
 
   it('should return 401 when token is invalid', async () => {
-    const confirmEmailResponse = await request(app.server).patch("/users/email-confirmation").send({ token: 'asdasdasd' });
+    const confirmEmailResponse = await request(app.server).patch("/api/users/email-confirmation").send({ token: 'asdasdasd' });
     expect(confirmEmailResponse.status).toBe(401);
     expect(confirmEmailResponse.body.error.code).toBe("INVALID_TOKEN");
   })
 
   it('should return 401 when token is expired', async () => {
     const token = tokenProvider.sign({ sub: 'ahsiudhasid', purpose: 'email_confirmation' }, 0)
-    const confirmEmailResponse = await request(app.server).patch("/users/email-confirmation").send({ token });
+    const confirmEmailResponse = await request(app.server).patch("/api/users/email-confirmation").send({ token });
     expect(confirmEmailResponse.status).toBe(401);
     expect(confirmEmailResponse.body.error.code).toBe("EXPIRED_TOKEN");
   })
 
   it('should return 401 when purpose is different of email_confirmation', async () => {
     const token = tokenProvider.sign({ sub: 'ahsiudhasid', purpose: 'authentication' }, 5)
-    const confirmEmailResponse = await request(app.server).patch("/users/email-confirmation").send({ token });
+    const confirmEmailResponse = await request(app.server).patch("/api/users/email-confirmation").send({ token });
     expect(confirmEmailResponse.status).toBe(401);
     expect(confirmEmailResponse.body.error.code).toBe("INVALID_TOKEN");
   })
 
   it('should return 401 when not found a user', async () => {
     const token = tokenProvider.sign({ sub: '5a56b41e-8c8c-42ef-b35b-3b1cea08dad7', purpose: 'email_confirmation' }, 5)
-    const confirmEmailResponse = await request(app.server).patch("/users/email-confirmation").send({ token });
+    const confirmEmailResponse = await request(app.server).patch("/api/users/email-confirmation").send({ token });
     expect(confirmEmailResponse.status).toBe(404);
     expect(confirmEmailResponse.body).toEqual({
       statusCode: 404,

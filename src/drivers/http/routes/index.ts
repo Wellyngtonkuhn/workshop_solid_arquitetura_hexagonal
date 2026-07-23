@@ -1,6 +1,9 @@
-import fp from "fastify-plugin"
-import { usersRoutes } from "../../../modules/users/presentation/http/index.js"
+import { FastifyInstance } from "fastify";
+import usersRoutes from "../../../modules/users/presentation/http/index.js";
 
-export const routesPlugin = fp(async (app) => {
-  usersRoutes(app)
-})
+export async function registerAllRoutes(app: FastifyInstance) {
+  const prefix = '/api'
+  await app.register(usersRoutes, { prefix });
+
+  console.log('✅ Todas as rotas dos módulos foram registradas');
+}

@@ -3,5 +3,5 @@ import { FastifyInstance } from "fastify";
 import { UpdateUserInputDTO } from "../../../application/useCases/update/input.dto.js";
 
 export async function updateUser(app: FastifyInstance, id: string, body: UpdateUserInputDTO) {
-  return request(app.server).patch(`/users/${id}`).send(body);
+  return request(app.server).patch(`/api/users/${id}`).send(body);
 }

@@ -6,7 +6,7 @@ import { createUserRouteSchema } from "./create-user.schema.js";
 export async function createUserRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().route({
     method: "POST",
-    url: "/users",
+    url: "/",
     schema: createUserRouteSchema,
 
     handler: async (request, reply) => {

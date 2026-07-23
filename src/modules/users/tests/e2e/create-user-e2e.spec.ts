@@ -23,7 +23,7 @@ beforeEach(async () => {
 });
 
 const validBody = makeCreateUserBody()
-const post = (body: unknown) => request(app.server).post("/users").send(body as object);
+const post = (body: unknown) => request(app.server).post("/api/users").send(body as object);
 
 const findByEmail = async (email: string) => {
   const [row] = await db
