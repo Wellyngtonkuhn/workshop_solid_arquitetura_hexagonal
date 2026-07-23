@@ -3,11 +3,14 @@ import { TokenPayload, TokenProvider } from "../../../../../shared/application/p
 import { UserNotFound } from "../../../errors/user-not-found.error.js";
 import { InvalidTokenError } from "../../../errors/invalid-token.error.js";
 import { ExpiredTokenError } from "../../../errors/expired-token.error.js";
+import { UserEmailConfirmedEvent } from "../../events/user-email-confirmed.event.js";
+import { EventBus } from "../../../../../shared/application/events/event-bus.js";
 
 export class UserConfirmEmail {
   constructor(
     private repository: UserRepository,
-    private tokenProvider: TokenProvider
+    private tokenProvider: TokenProvider,
+    private eventBus: EventBus
   ){}
 
   async execute(token: string): Promise<void>{
@@ -36,5 +39,7 @@ export class UserConfirmEmail {
     user.activate()
 
     await this.repository.update(user)
+
+    this.eventBus.publish(new UserEmailConfirmedEvent(user))
   }
 }
