@@ -4,8 +4,16 @@ import { registerErrorHandler } from "./error-handler.plugin.js";
 import { registerSwagger } from "./swagger.plugin.js";
 
 export async function registerPlugins(app: FastifyInstance) {
+  console.log("🚀 Initializing Fastify plugins...");
+
   registerValidation(app);
+  console.log("✔ Validation plugin initialized");
+
   registerErrorHandler(app);
+  console.log("✔ Error handler plugin initialized");
+
   await registerSwagger(app);
-  console.log("✔ All plugins initialized");
+  console.log("✔ Swagger plugin initialized");
+
+  console.log("✅ All plugins initialized");
 }

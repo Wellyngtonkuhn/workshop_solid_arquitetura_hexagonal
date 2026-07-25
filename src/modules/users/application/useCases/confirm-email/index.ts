@@ -8,9 +8,9 @@ import { EventBus } from "../../../../../shared/application/events/event-bus.js"
 
 export class UserConfirmEmail {
   constructor(
-    private repository: UserRepository,
-    private tokenProvider: TokenProvider,
-    private eventBus: EventBus
+    private readonly repository: UserRepository,
+    private readonly tokenProvider: TokenProvider,
+    private readonly eventBus: EventBus
   ){}
 
   async execute(token: string): Promise<void>{

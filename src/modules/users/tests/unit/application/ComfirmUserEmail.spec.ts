@@ -9,6 +9,7 @@ import { InvalidTokenError } from "../../../errors/invalid-token.error.js";
 import { UserNotFound } from "../../../errors/user-not-found.error.js";
 import { createUnitTestUser } from "../helpers/create-user.helper.js";
 import { createUnitTestToken } from "../helpers/create-token.helper.js";
+import { globalEventBus } from "../../../../../shared/container/index.js";
 
 let repository: InMemoryUserRepository;
 let tokenProvider: TokenProvider;
@@ -17,7 +18,7 @@ let sut: UserConfirmEmail;
 beforeEach(() => {
   repository = new InMemoryUserRepository();
   tokenProvider = new JwtTokenProvider()
-  sut = new UserConfirmEmail(repository, tokenProvider);
+  sut = new UserConfirmEmail(repository, tokenProvider, globalEventBus);
 })
 
 describe("UserConfirmEmail", () => {

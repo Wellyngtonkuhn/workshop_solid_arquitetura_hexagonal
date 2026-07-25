@@ -1,11 +1,9 @@
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { makeCreateUser } from "../../../application/factories/make-create-users.factory.js";
 import { FastifyInstance } from "fastify";
 import { createUserRouteSchema } from "./create-user.schema.js";
+import { createUser } from "../../../container/index.js";
 
-export async function createUserRoute(app: FastifyInstance) {
-  const createUser = makeCreateUser();
-  
+export async function createUserRoute(app: FastifyInstance) {  
   app.withTypeProvider<ZodTypeProvider>().route({
     method: "POST",
     url: "/",

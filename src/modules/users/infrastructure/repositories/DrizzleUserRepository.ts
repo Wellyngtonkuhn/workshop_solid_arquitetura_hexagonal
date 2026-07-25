@@ -2,14 +2,17 @@ import { eq } from "drizzle-orm";
 import { UserRepository } from "../../domain/repositories/user-repository.js";
 import { User } from "../../domain/entities/User.js";
 import { UserMapper } from "../mappers/user-mapper.js";
-import { db } from "../../../../shared/database/drizzle/client.js";
 import { usersTable } from "../../../../shared/database/schema/user-table.js";
 import { mapDrizzleError } from "../../../../shared/database/drizzle-error-mapper.js";
 import { userDbErrorMap } from "./user-db-errors.js";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export class DrizzelUserRepository implements UserRepository {
+  constructor(
+    private readonly db: NodePgDatabase
+  ){}
   async findByEmail(email: string): Promise<User | null> {
-    const [existingUser] = await db
+    const [existingUser] = await this.db
       .select()
       .from(usersTable)
       .where(eq(usersTable.email, email));
@@ -21,7 +24,7 @@ export class DrizzelUserRepository implements UserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    const [ user ] = await db.select().from(usersTable).where(eq(usersTable.id, id))
+    const [ user ] = await this.db.select().from(usersTable).where(eq(usersTable.id, id))
 
     if (!user) {
       return null;
@@ -32,7 +35,7 @@ export class DrizzelUserRepository implements UserRepository {
 
   async save(user: User): Promise<User> {
     try {
-      const [userCreated] = await db
+      const [userCreated] = await this.db
         .insert(usersTable)
         .values({
           name: user.propsData.name,
@@ -53,7 +56,7 @@ export class DrizzelUserRepository implements UserRepository {
 
   async update(user: User): Promise<void> {
     try {
-      await db.update(usersTable).set({
+      await this.db.update(usersTable).set({
         name: user.propsData.name,
         age: user.propsData.age,
         phoneNumber: user.propsData.phoneNumber,
