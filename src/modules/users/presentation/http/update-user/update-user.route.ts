@@ -1,8 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { makeUpdateUsers } from "../../../application/factories/make-update-users.factory.js";
 import { updateUserSchema } from "./update-users.schema.js";
-import { updateUser } from "../../../container/index.js";
+import { makeUpdateUser } from "../../../container/index.js";
 
 export async function updateUserRoute(app: FastifyInstance){
   app.withTypeProvider<ZodTypeProvider>().route({
@@ -10,6 +9,7 @@ export async function updateUserRoute(app: FastifyInstance){
     url: '/:id',
     schema: updateUserSchema,
     handler: async (request, reply) => {
+      const updateUser = makeUpdateUser()
       const userId = request.params.id
       const output = await updateUser.execute(userId, request.body)
       return reply.status(204).send(output)

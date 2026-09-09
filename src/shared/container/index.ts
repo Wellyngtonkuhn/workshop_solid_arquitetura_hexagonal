@@ -1,6 +1,20 @@
 import { InMemoryEventBus } from "../application/events/in-memory-event-bus.js";
 import { db } from "../database/drizzle/client.js";
+import { NotificationService } from "../infrastructure/notifications/Notification.service.js";
+import { BcryptHashProvider } from "../infrastructure/security/hash/hashProvider.js";
+import { JwtTokenProvider } from "../infrastructure/security/token/index.js";
 
-export const globalEventBus = new InMemoryEventBus()
+const globalEventBus = new InMemoryEventBus()
+const notificationService = new NotificationService();
+const bcryptHashProvider = new BcryptHashProvider();
+const jwtProvider = new JwtTokenProvider();
 
-export const database = db;
+const database = db;
+
+export {
+  database,
+  jwtProvider,
+  bcryptHashProvider,
+  notificationService,
+  globalEventBus
+}
