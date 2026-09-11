@@ -1,10 +1,11 @@
-import { UserRepository } from "../../../domain/repositories/user-repository.js";
-import { TokenPayload, TokenProvider } from "../../../../../shared/application/ports/token-provider.js";
-import { UserNotFound } from "../../../errors/user-not-found.error.js";
-import { InvalidTokenError } from "../../../errors/invalid-token.error.js";
-import { ExpiredTokenError } from "../../../errors/expired-token.error.js";
+import { UserRepository } from "@/modules/users/domain/repositories/user-repository.js";
+import { ExpiredTokenError } from "@/modules/users/errors/expired-token.error.js";
+import { InvalidTokenError } from "@/modules/users/errors/invalid-token.error.js";
+import { UserNotFound } from "@/modules/users/errors/user-not-found.error.js";
+import { EventBus } from "@/shared/application/events/event-bus.js";
+import { TokenPayload, TokenProvider } from "@/shared/application/ports/token-provider.js";
 import { UserEmailConfirmedEvent } from "../../events/user-email-confirmed.event.js";
-import { EventBus } from "../../../../../shared/application/events/event-bus.js";
+
 
 export class UserConfirmEmail {
   constructor(

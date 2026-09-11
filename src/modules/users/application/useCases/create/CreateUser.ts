@@ -1,14 +1,14 @@
+import { User } from "@/modules/users/domain/entities/User.js";
+import { UserRepository } from "@/modules/users/domain/repositories/user-repository.js";
+import { EmailAlreadyExistsError } from "@/modules/users/errors/email-already-exists.error.js";
+import { PasswordDoNotMatchError } from "@/modules/users/errors/password-do-not-match.error.js";
+import { TokenProvider } from "@/shared/application/ports/token-provider.js";
+import { NotificationService } from "@/shared/infrastructure/notifications/Notification.service.js";
+import { NotificationChannel } from "@/shared/infrastructure/notifications/ports/notification-provider.js";
+import { HashProvider } from "../../ports/hash-provider.js";
 import { CreateUserInputDTO } from "./create-user-input.js";
 import { CreateUserOutputDTO } from "./create-user-output.js";
 
-import { HashProvider } from "../../ports/hash-provider.js";
-import { UserRepository } from "../../../domain/repositories/user-repository.js";
-import { User } from "../../../domain/entities/User.js";
-import { PasswordDoNotMatchError } from "../../../errors/password-do-not-match.error.js";
-import { EmailAlreadyExistsError } from "../../../errors/email-already-exists.error.js";
-import { NotificationService } from "../../../../../shared/infrastructure/notifications/Notification.service.js";
-import { NotificationChannel } from "../../../../../shared/infrastructure/notifications/ports/notification-provider.js";
-import { TokenProvider } from "../../../../../shared/application/ports/token-provider.js";
 
 export class CreateUser {
   // aqui é invertido a dependencia usando o D do SOLID, esse módulo de alto nível depende apenas da abstração do módulo de baixo nível

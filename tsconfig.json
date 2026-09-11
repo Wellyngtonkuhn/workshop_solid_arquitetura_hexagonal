@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
-
+    "noEmitOnError": true,
     "paths": {
       "@/*": ["./src/*"]
     }

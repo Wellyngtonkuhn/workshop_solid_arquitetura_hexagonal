@@ -1,7 +1,8 @@
-import { UserRepository } from "../../../domain/repositories/user-repository.js";
-import { UserCannotUpdateProfileError } from "../../../errors/cannot-update-profile.error.js";
-import { UserNotFound } from "../../../errors/user-not-found.error.js";
-import { UpdateUserInputDTO } from "./input.dto.js";
+import { UserRepository } from "@/modules/users/domain/repositories/user-repository.js"
+import { UserCannotUpdateProfileError } from "@/modules/users/errors/cannot-update-profile.error.js"
+import { UserNotFound } from "@/modules/users/errors/user-not-found.error.js"
+import { UpdateUserInputDTO } from "./input.dto.js"
+
 
 export class UpdateUser {
   constructor(
