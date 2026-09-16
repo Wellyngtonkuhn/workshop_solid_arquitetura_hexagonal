@@ -29,11 +29,11 @@ beforeEach(async () => {
 
 describe("Login", () => {
   const userRepository = new DrizzelUserRepository(db);
-  it("It should make login successfully", async () => {
+  it("should login successfully", async () => {
     const userBody = makeCreateUserBody()
-    const activeUser = await createVerifiedUser(userBody, userRepository, bcryptHashProvider)
+    const verifiedUser = await createVerifiedUser(userBody, userRepository, bcryptHashProvider)
     const body: LoginDTO = {
-      password: "123456789",
+      password: userBody.password,
       email: userBody.email
     }
     const response = await loginHelper(app, body)
@@ -41,9 +41,9 @@ describe("Login", () => {
     expect(response.status).toBe(200)
 
     expect(response.body.user).toEqual({
-      id: activeUser.propsData.id,
-      email: activeUser.propsData.email,
-      name: activeUser.propsData.name,
+      id: verifiedUser.propsData.id,
+      email: verifiedUser.propsData.email,
+      name: verifiedUser.propsData.name,
     })
 
     expect(response.body.token.access_token).toBeTruthy()
@@ -52,7 +52,7 @@ describe("Login", () => {
     const sessions = await db.select().from(sessionsTable)
 
     expect(sessions).toHaveLength(1)
-    expect(sessions[0].user_id).toBe(activeUser.propsData.id)
+    expect(sessions[0].user_id).toBe(verifiedUser.propsData.id)
     expect(sessions[0].refresh_token_hash).toBeTruthy()
     expect(sessions[0].refresh_token_hash).not.toBe(response.body.token.refresh_token)
   })
