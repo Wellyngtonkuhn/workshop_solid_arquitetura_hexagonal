@@ -7,8 +7,17 @@ export const inputSchema = z.object({
   password: z.string().min(1)
 })
 
-export const outputSchema = z.object({
-  token: z.string()
+export const outputLoginSchema = z.object({
+  user: z.object({
+    id: z.string(),
+    email: z.email(),
+    name: z.string(),
+  }),
+
+  token: z.object({
+    access_token: z.string(),
+    refresh_token: z.string(),
+  }),
 })
 
 export const LoginSchema = {
@@ -16,7 +25,7 @@ export const LoginSchema = {
   summary: "Login",
   body: inputSchema,
   response: {
-    200: outputSchema,
+    200: outputLoginSchema,
     400: errorResponseSchema,
     401: errorResponseSchema,
     403: errorResponseSchema,

@@ -6,7 +6,6 @@ import { EventBus } from "@/shared/application/events/event-bus.js";
 import { TokenPayload, TokenProvider } from "@/shared/application/ports/token-provider.js";
 import { UserEmailConfirmedEvent } from "../../events/user-email-confirmed.event.js";
 
-
 export class UserConfirmEmail {
   constructor(
     private readonly repository: UserRepository,
