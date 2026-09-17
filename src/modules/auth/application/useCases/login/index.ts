@@ -21,7 +21,7 @@ export class LoginUseCase {
 
   async execute(body: LoginDTO): Promise<ILoginOutput>{
     const user = await this.userRepository.findByEmail(body.email)
-  
+
     if(!user){
       throw new InvalidCredentialsError()
     }
@@ -29,7 +29,7 @@ export class LoginUseCase {
     if(!user.canLogin()){
       throw new UserNotActivatedError()
     }
-
+    
     const isSameHashPassword = await this.hashProvider.compare(body.password, user.propsData.password)
 
     if(!isSameHashPassword){

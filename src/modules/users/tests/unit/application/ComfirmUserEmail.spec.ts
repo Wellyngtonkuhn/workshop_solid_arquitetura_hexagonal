@@ -3,7 +3,7 @@ import { UserConfirmEmail } from "../../../application/useCases/confirm-email/in
 import { InMemoryUserRepository } from "../doubles/repositories/InMemoryUserRepository.js";
 import { TokenProvider } from "../../../../../shared/application/ports/token-provider.js";
 import { JwtTokenProvider } from "../../../../../shared/infrastructure/security/token/index.js";
-import { User, UserStatus } from "../../../domain/entities/User.js";
+import { UserStatus } from "../../../domain/entities/User.js";
 import { ExpiredTokenError } from "../../../errors/expired-token.error.js";
 import { InvalidTokenError } from "../../../errors/invalid-token.error.js";
 import { UserNotFound } from "../../../errors/user-not-found.error.js";

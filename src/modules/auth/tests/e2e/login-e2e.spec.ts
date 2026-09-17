@@ -158,7 +158,7 @@ describe("Login", () => {
     );
   })
 
-   it("should return 400 when email is missing", async () => {
+  it("should return 400 when email is missing", async () => {
     const body = {
       password: '123456789'
     }
