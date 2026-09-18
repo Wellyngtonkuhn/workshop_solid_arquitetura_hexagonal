@@ -10,6 +10,15 @@ export async function registerSwagger(app: FastifyInstance) {
         title: "Workshop Solid",
         version: "1.0.0",
       },
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT"
+          }
+        }
+      }
     },
     transform: jsonSchemaTransform,
   })

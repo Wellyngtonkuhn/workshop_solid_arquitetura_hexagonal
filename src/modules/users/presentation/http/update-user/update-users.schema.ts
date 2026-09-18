@@ -18,6 +18,9 @@ const outputSchema = z.void()
 export const updateUserSchema = {
   tags: ['Users'],
   summary: 'Update User',
+  security: [
+    { bearerAuth: [] }
+  ],
   params,
   body: inputSchema,
   response: {
