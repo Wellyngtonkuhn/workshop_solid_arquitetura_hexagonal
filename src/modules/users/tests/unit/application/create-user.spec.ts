@@ -3,7 +3,7 @@ import { CreateUser } from "../../../application/useCases/create/CreateUser.js";
 import { InMemoryUserRepository } from "../doubles/repositories/InMemoryUserRepository.js";
 import { PasswordDoNotMatchError } from "../../../errors/password-do-not-match.error.js";
 import { EmailAlreadyExistsError } from "../../../errors/email-already-exists.error.js";
-import { FakeHashProvider } from "../doubles/providers/fake-hash-provider.js";
+import { FakeHashProvider } from "@/shared/tests/unit/doubles/FakeHashProvider.js";
 
 let repository: InMemoryUserRepository;
 let hashProvider: FakeHashProvider;

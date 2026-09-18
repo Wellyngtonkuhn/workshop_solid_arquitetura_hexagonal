@@ -3,13 +3,14 @@ import { InMemorySessionRepository } from "../../doubles/repository/inMemorySess
 import { TokenProvider } from "@/shared/application/ports/token-provider.js";
 import { LoginUseCase } from "@/modules/auth/application/useCases/login/index.js";
 import { HashProvider } from "@/modules/users/application/ports/hash-provider.js";
-import { bcryptHashProvider, jwtProvider } from "@/shared/container/index.js";
 import { InMemoryUserRepository } from "@/modules/users/tests/unit/doubles/repositories/InMemoryUserRepository.js";
 import { createUnitTestUser } from "@/modules/users/tests/unit/helpers/create-user.helper.js";
 import { LoginDTO } from "@/modules/auth/application/useCases/login/login.dto.js";
 import { env } from "@/shared/config/env.js";
 import { InvalidCredentialsError } from "@/modules/auth/errors/invalid-credentials.error.js";
 import { UserNotActivatedError } from "@/modules/auth/errors/user-not-activated.error.js";
+import { FakeHashProvider } from "@/shared/tests/unit/doubles/FakeHashProvider.js";
+import { FakeTokenProvider } from "@/shared/tests/unit/doubles/FakeTokenProvider.js";
 
 let userRepository: InMemoryUserRepository;
 let hashProvider: HashProvider;
@@ -19,8 +20,8 @@ let sut: LoginUseCase;
 
 beforeEach(() => {
   userRepository = new InMemoryUserRepository();
-  hashProvider = bcryptHashProvider
-  tokenProvider = jwtProvider
+  hashProvider = new FakeHashProvider();
+  tokenProvider = new FakeTokenProvider();
   sessionRepository = new InMemorySessionRepository();
   sut = new LoginUseCase(userRepository, hashProvider, tokenProvider, sessionRepository);
 });
