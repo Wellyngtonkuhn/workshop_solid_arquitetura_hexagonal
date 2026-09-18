@@ -8,6 +8,8 @@ import { InMemoryUserRepository } from "@/modules/users/tests/unit/doubles/repos
 import { createUnitTestUser } from "@/modules/users/tests/unit/helpers/create-user.helper.js";
 import { LoginDTO } from "@/modules/auth/application/useCases/login/login.dto.js";
 import { env } from "@/shared/config/env.js";
+import { InvalidCredentialsError } from "@/modules/auth/errors/invalid-credentials.error.js";
+import { UserNotActivatedError } from "@/modules/auth/errors/user-not-activated.error.js";
 
 let userRepository: InMemoryUserRepository;
 let hashProvider: HashProvider;
@@ -65,4 +67,41 @@ describe("Login Usecase - Unit Test", () => {
 
     expect(session.propsData.expiresAt.getTime()).toBeGreaterThan(Date.now())
   });
+
+  it("should throw Invalid Credentials Error when there is no user for given an email", async () => {
+    const body: LoginDTO = {
+      email: "wrong@email.com",
+      password: '12345689'
+    }
+  
+    await expect(sut.execute(body)).rejects.toBeInstanceOf(InvalidCredentialsError)
+    expect(sessionRepository.sessions).toHaveLength(0)
+  })
+
+  it("should throw User Not Activated Error when user is not activeted", async () => {
+    const user = await createUnitTestUser(userRepository, hashProvider)
+    
+    await userRepository.update(user)
+    const body: LoginDTO = {
+      email: user.propsData.email,
+      password: user.propsData.password
+    }
+  
+    await expect(sut.execute(body)).rejects.toBeInstanceOf(UserNotActivatedError)
+    expect(sessionRepository.sessions).toHaveLength(0)
+  })
+
+  it("should throw Invalid Credentials Error when password is wrong", async () => {
+    const user = await createUnitTestUser(userRepository, hashProvider)
+    user.register()
+    user.activate()
+    await userRepository.update(user)
+    const body: LoginDTO = {
+      email: user.propsData.email,
+      password: "wrong_password"
+    }
+  
+    await expect(sut.execute(body)).rejects.toBeInstanceOf(InvalidCredentialsError)
+    expect(sessionRepository.sessions).toHaveLength(0)
+  })
 });
