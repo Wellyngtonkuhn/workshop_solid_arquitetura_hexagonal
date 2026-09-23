@@ -12,7 +12,21 @@ export async function LoginRoute(app: FastifyInstance){
       const login = makeLogin()
       const body = request.body
       const output = await login.execute(body)
-      return reply.status(200).send(output)
+     
+      reply.setCookie("refresh_token", output.token.refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        path: '/auth/refresh',
+        maxAge: 60 * 60 * 24 * 7,
+      })
+
+      return reply.status(200).send({
+        user: output.user,
+        token: {
+          access_token: output.token.access_token,
+        },
+      });
     }
   })
 }

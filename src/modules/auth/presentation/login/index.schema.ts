@@ -16,7 +16,6 @@ export const outputLoginSchema = z.object({
 
   token: z.object({
     access_token: z.string(),
-    refresh_token: z.string(),
   }),
 })
 

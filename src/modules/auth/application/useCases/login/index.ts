@@ -4,7 +4,7 @@ import { TokenProvider } from "@/shared/application/ports/token-provider.js";
 import { LoginDTO } from "./login.dto.js";
 import { InvalidCredentialsError } from "@/modules/auth/errors/invalid-credentials.error.js";
 import { UserNotActivatedError } from "@/modules/auth/errors/user-not-activated.error.js";
-import { ILoginOutput } from "./login-output.js";
+import { LoginResult } from "./login-output.js";
 import { ISessionRepository } from "@/modules/auth/domain/repository/session-repository.js";
 import { Session } from "@/modules/auth/domain/entities/Session.js";
 import { env } from "@/shared/config/env.js";
@@ -19,7 +19,7 @@ export class LoginUseCase {
     private readonly sessionRepository: ISessionRepository,
   ){}
 
-  async execute(body: LoginDTO): Promise<ILoginOutput>{
+  async execute(body: LoginDTO): Promise<LoginResult>{
     const user = await this.userRepository.findByEmail(body.email)
 
     if(!user){

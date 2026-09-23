@@ -1,4 +1,11 @@
-import { outputLoginSchema } from "@/modules/auth/presentation/login/index.schema.js";
-import { z } from 'zod'
-
-export type ILoginOutput = z.infer<typeof outputLoginSchema>;
+export interface LoginResult {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+  token: {
+    access_token: string;
+    refresh_token: string;
+  };
+}
