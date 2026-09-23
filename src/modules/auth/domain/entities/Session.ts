@@ -17,6 +17,7 @@ export class Session {
 
     return new Session({
       ...props,
+      revokedAt: props.revokedAt ?? null,
       createdAt: now,
       updatedAt: now,
     })
