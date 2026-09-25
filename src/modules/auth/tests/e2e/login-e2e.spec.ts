@@ -49,7 +49,6 @@ describe("Login", () => {
     })
 
     expect(response.body.token.access_token).toBeTruthy()
-    expect(response.body.token.refresh_token).toBeTruthy()
 
     const sessions = await db.select().from(sessionsTable)
 

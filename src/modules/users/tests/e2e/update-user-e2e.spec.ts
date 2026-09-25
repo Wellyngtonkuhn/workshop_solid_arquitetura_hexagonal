@@ -11,6 +11,9 @@ import { updateUser } from "./helpers/update-user.js";
 import { UserStatus } from "../../domain/entities/User.js";
 import { findUserById } from "./helpers/find-user-by-id.js";
 import { makeCreateUserBody } from "./helpers/make-create-user-body.js";
+import { helperLoginUser } from "@/modules/auth/tests/helpers/login-user.js";
+import { createAuthenticatedUser } from "./helpers/create-authenticated-user.js";
+import { database } from "@/shared/container/index.js";
 
 let app: FastifyInstance;
 
@@ -38,9 +41,12 @@ const updateUserBody: UpdateUserInputDTO = {
 
 describe("Patch / users", () => {
   it('should have an error with status 404 when user does not exists', async () => {
-    const updateResponse = await updateUser(app, 'a3756cfb-d2a2-4c1f-b8e4-603f7ba3db9a', updateUserBody)
-    expect(updateResponse.status).toBe(404)
-    expect(updateResponse.body).toEqual({
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
+
+    const updateResponse = await updateUser(app, 'a3756cfb-d2a2-4c1f-b8e4-603f7ba3db9a', updateUserBody, accessToken)
+    expect(updateResponse.statusCode).toBe(404)
+    const bodyResponse = updateResponse.json()
+    expect(bodyResponse).toEqual({
       statusCode: 404,
       error: {
         code: "USER_NOT_FOUND",
@@ -50,14 +56,16 @@ describe("Patch / users", () => {
   })
 
   it('users not verified must not be able to update their profile with an errror with status code 403', async () => {
-    const createResponse = await createUser(app, createUserBody)
-    expect(createResponse.status).toBe(201)
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
+
+    await database.update(usersTable).set({ status: UserStatus.PENDING }).where(eq(usersTable.id, id));
+    const updateResponse = await updateUser(app, id, updateUserBody, accessToken)
     
-    const id = createResponse.body.id;
-    const updateResponse = await updateUser(app, id, updateUserBody)
-    
-    expect(updateResponse.status).toBe(403)
-    expect(updateResponse.body).toEqual({
+    expect(updateResponse.statusCode).toBe(403)
+
+    const responseBody = updateResponse.json()
+
+    expect(responseBody).toEqual({
       statusCode: 403,
       error: {
         code: "USER_CANNOT_UPDATE",
@@ -67,16 +75,11 @@ describe("Patch / users", () => {
   })
 
   it("update a user and returns 204 and validate that the fields were updated correctly.", async () => {
-    const createResponse = await createUser(app, createUserBody)
-    expect(createResponse.status).toBe(201)
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
 
-    const id = createResponse.body.id;
+    const updateResponse = await updateUser(app, id, updateUserBody, accessToken)
 
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, id));
-
-    const updateResponse = await updateUser(app, id, updateUserBody)
-
-    expect(updateResponse.status).toBe(204);
+    expect(updateResponse.statusCode).toBe(204);
 
     const user = await findUserById(id)
     
@@ -87,32 +90,23 @@ describe("Patch / users", () => {
   })
 
   it("should return 409 when phone number already exists", async () => {
-    const user1 = await createUser(app, {
-      ...createUserBody,
-      email: "user1@gmail.com",
-      phoneNumber: "+5511999999999",
+    const { id: userId01, accessToken: accessTokenUser01 } = await createAuthenticatedUser(app, createUserBody);
+
+    const { id: userId02, accessToken: accessTokenUser02 } = await createAuthenticatedUser(app, {
+      ...createUserBody, email: "user2@gmail.com",
+      phoneNumber: "+5511966558877"
     });
-    expect(user1.status).toBe(201)
 
-    const user2 = await createUser(app, {
-      ...createUserBody,
-      email: "user2@gmail.com",
-      phoneNumber: "+5511966558877",
-    });
-    expect(user2.status).toBe(201)
-
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, user1.body.id))
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, user2.body.id))
-
-    const response = await updateUser(app, user1.body.id, {
+    const response = await updateUser(app, userId01, {
       ...updateUserBody,
-      phoneNumber: user2.body.phoneNumber,
-    });
+      phoneNumber: "+5511966558877",
+    }, accessTokenUser01);
 
+    expect(response.statusCode).toBe(409);
 
-    expect(response.status).toBe(409);
+    const bodyResponse = response.json();
 
-    expect(response.body).toEqual({
+    expect(bodyResponse).toEqual({
       statusCode: 409,
       error: {
         code: "PHONE_ALREADY_EXISTS",
@@ -124,19 +118,18 @@ describe("Patch / users", () => {
 
 describe("PATCH /users - validation fields", () => {
   it("should return 400 when name is empty", async () => {
-    const created = await createUser(app, createUserBody);
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
 
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, created.body.id));
-
-    const response = await updateUser(app, created.body.id, {
+    const response = await updateUser(app, id, {
       ...updateUserBody,
       name: "",
-    });
+    }, accessToken);
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
+    const bodyResponse = response.json();
 
-    expect(response.body.error.code).toBe("VALIDATION_ERROR");
-    expect(response.body.error.details).toContainEqual(
+    expect(bodyResponse.error.code).toBe("VALIDATION_ERROR");
+    expect(bodyResponse.error.details).toContainEqual(
       expect.objectContaining({
         field: "name",
       }),
@@ -144,18 +137,17 @@ describe("PATCH /users - validation fields", () => {
   });
 
   it("should return 400 when age is less than 18", async () => {
-    const created = await createUser(app, createUserBody);
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
 
-      await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, created.body.id));
-
-    const response = await updateUser(app, created.body.id, {
+    const response = await updateUser(app, id, {
       ...updateUserBody,
       age: 17,
-    });
+    }, accessToken);
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
+    const bodyResponse = response.json();
 
-    expect(response.body.error.details).toContainEqual(
+    expect(bodyResponse.error.details).toContainEqual(
       expect.objectContaining({
         field: "age",
       }),
@@ -163,18 +155,17 @@ describe("PATCH /users - validation fields", () => {
   });
 
   it("should return 400 when age is greater than 100", async () => {
-    const created = await createUser(app, createUserBody);
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
 
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, created.body.id));
-
-    const response = await updateUser(app, created.body.id, {
+    const response = await updateUser(app, id, {
       ...updateUserBody,
       age: 101,
-    });
+    }, accessToken);
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
+    const bodyResponse = response.json();
 
-    expect(response.body.error.details).toContainEqual(
+    expect(bodyResponse.error.details).toContainEqual(
       expect.objectContaining({
         field: "age",
       }),
@@ -182,18 +173,17 @@ describe("PATCH /users - validation fields", () => {
   });
 
   it("should return 400 when phone number is invalid", async () => {
-    const created = await createUser(app, createUserBody);
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
 
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, created.body.id));
-
-    const response = await updateUser(app, created.body.id, {
+    const response = await updateUser(app, id, {
       ...updateUserBody,
       phoneNumber: "123456",
-    });
+    }, accessToken);
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
+    const bodyResponse = response.json();
 
-    expect(response.body.error.details).toContainEqual(
+    expect(bodyResponse.error.details).toContainEqual(
       expect.objectContaining({
         field: "phoneNumber",
       }),
@@ -201,18 +191,17 @@ describe("PATCH /users - validation fields", () => {
   });
 
   it("should return 400 when preferredMarketingChannel is invalid", async () => {
-    const created = await createUser(app, createUserBody);
+    const { id, accessToken } = await createAuthenticatedUser(app, createUserBody);
 
-    await db.update(usersTable).set({ status: UserStatus.VERIFIED }).where(eq(usersTable.id, created.body.id));
-
-    const response = await updateUser(app, created.body.id, {
+    const response = await updateUser(app, id, {
       ...updateUserBody,
       preferredMarketingChannel: "telegram",
-    });
+    }, accessToken);
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
+    const bodyResponse = response.json();
 
-    expect(response.body.error.details).toContainEqual(
+    expect(bodyResponse.error.details).toContainEqual(
       expect.objectContaining({
         field: "preferredMarketingChannel",
       }),
